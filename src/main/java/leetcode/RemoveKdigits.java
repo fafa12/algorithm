@@ -20,7 +20,7 @@ public class RemoveKdigits {
         System.out.println(s);
     }
 
-    private String removeKdigits(String num, int k) {
+    public String removeKdigits(String num, int k) {
         Deque<Character> deque = new LinkedList<>();
 
         for (int i = 0; i < num.length(); i++) {
