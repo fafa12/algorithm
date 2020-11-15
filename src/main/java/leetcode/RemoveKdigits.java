@@ -1,5 +1,8 @@
 package leetcode;
 
+import java.util.Deque;
+import java.util.LinkedList;
+
 public class RemoveKdigits {
 
     /**
@@ -13,35 +16,39 @@ public class RemoveKdigits {
      */
     public static void main(String[] args) {
         RemoveKdigits removeKdigits = new RemoveKdigits();
-        String s = removeKdigits.removeKdigits("1432219", 3);
+        String s = removeKdigits.removeKdigits("1234567890", 9);
         System.out.println(s);
     }
 
-    public String removeKdigits(String num, int k) {
+    private String removeKdigits(String num, int k) {
+        Deque<Character> deque = new LinkedList<>();
 
-        String[] numbs = num.split("");
-
-        for (int i = 0; i < numbs.length - 1; i++) {
-
-            if (k == 0) break;
-
-            if (k > 0 && numbs[i].compareTo(numbs[i + 1]) > 0) {
+        for (int i = 0; i < num.length(); i++) {
+            char c = num.charAt(i);
+            while (!deque.isEmpty() && k > 0 && deque.peekLast() > c) {
+                deque.pollLast();
                 k--;
-                numbs[i] = null;
             }
+
+            deque.offerLast(c);
         }
 
-        for (int i = 0; i < k; i++) {
-            if (numbs[numbs.length - 1 - i] != null) numbs[numbs.length - 1 - i] = null;
+        for (int i = 0; i < k; ++i) {
+            deque.pollLast();
         }
 
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < numbs.length; i++) {
-            if (numbs[i] != null && !(result.length() == 0 && numbs[i].equals("0"))) {
-                result.append(numbs[i]);
+        StringBuilder ret = new StringBuilder();
+        boolean headZero = true;
+        while (!deque.isEmpty()) {
+            char digit = deque.pollFirst();
+            if (headZero && digit == '0') {
+                continue;
             }
+            headZero = false;
+            ret.append(digit);
         }
-
-        return result.toString();
+        return ret.length() == 0 ? "0" : ret.toString();
     }
+
+
 }
